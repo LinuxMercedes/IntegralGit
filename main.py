@@ -17,18 +17,19 @@ def latest(repo):
 
 @app.route("/update", methods=["POST"])
 def update():
-  payload = json.dumps(request.form['payload'])
+  jd = json.JSONDecoder()
+  payload = jd.decode(request.form['payload'])
   repo = payload['repository']['name']
   owner = payload['repository']['owner']['name']
   lastCommit[repo] = payload['commits'][-1]['message']
 
   url = "https://raw.github.com/" + owner + "/" + repo + "/master/bot.py"
-  page = urllib2.urlopen(url)
-  script_data = page.read()
-  page.close()
-
-  with open("deploy.sh", "wb") as background:
-    background.write(script_data)
+#  page = urllib2.urlopen(url)
+#  script_data = page.read()
+#  page.close()
+#
+#  with open("deploy.sh", "wb") as background:
+#    background.write(script_data)
 
   return ""
 
