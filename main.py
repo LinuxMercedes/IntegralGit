@@ -4,20 +4,21 @@ import json
 import ConfigParser
 
 app = Flask(__name__)
-lastCommit = "No recorded commits!"
+lastCommit = {}
 
 @app.route("/")
 def hello():
   return "IntegralGit: continuous integration via GitHub"
 
-@app.route("/latest")
-def latest():
-  return lastCommit
+@app.route("/<repo>")
+def latest(repo):
+  return lastCommit.get(repo, "I don't recognize that repo name. Try committing something to it?")
 
 @app.route("/update", methods=["POST"])
 def update():
   payload = json.dumps(request.form['payload'])
-  lastCommit = payload['commits'][0]['message']
+  repo = payload['repository']['name']
+  lastCommit[repo] = payload['commits'][0]['message']
   return ""
 
 def parseConfig(filename):
