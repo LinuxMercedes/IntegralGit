@@ -2,6 +2,7 @@ from flask import Flask, request
 from pprint import pprint
 import json
 import ConfigParser
+import urllib2
 
 app = Flask(__name__)
 lastCommit = {}
@@ -18,7 +19,17 @@ def latest(repo):
 def update():
   payload = json.dumps(request.form['payload'])
   repo = payload['repository']['name']
-  lastCommit[repo] = payload['commits'][0]['message']
+  owner = payload['repository']['owner']['name']
+  lastCommit[repo] = payload['commits'][-1]['message']
+
+  url = "https://raw.github.com/" + owner + "/" + repo + "/master/bot.py"
+  page = urllib2.urlopen(url)
+  script_data = page.read()
+  page.close()
+
+  with open("deploy.sh", "wb") as background:
+    background.write(script_data)
+
   return ""
 
 def parseConfig(filename):
