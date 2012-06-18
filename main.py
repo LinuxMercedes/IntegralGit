@@ -23,13 +23,13 @@ def update():
   owner = payload['repository']['owner']['name']
   lastCommit[repo] = payload['commits'][-1]['message']
 
-  url = "https://raw.github.com/" + owner + "/" + repo + "/master/bot.py"
-#  page = urllib2.urlopen(url)
-#  script_data = page.read()
-#  page.close()
-#
-#  with open("deploy.sh", "wb") as background:
-#    background.write(script_data)
+  url = "https://raw.github.com/" + owner + "/" + repo + "/master/README.md"
+  page = urllib2.urlopen(url)
+  script_data = page.read()
+  page.close()
+
+  with open("deploy.sh", "wb") as background:
+    background.write(script_data)
 
   return ""
 
