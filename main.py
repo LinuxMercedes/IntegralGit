@@ -6,6 +6,7 @@ import urllib2
 
 app = Flask(__name__)
 lastCommit = {}
+repoLocation = "~/src"
 
 @app.route("/")
 def hello():
@@ -23,13 +24,17 @@ def update():
   owner = payload['repository']['owner']['name']
   lastCommit[repo] = payload['commits'][-1]['message']
 
-  url = "https://raw.github.com/" + owner + "/" + repo + "/master/README.md"
-  page = urllib2.urlopen(url)
-  script_data = page.read()
-  page.close()
+# Build git clone url
+  gitre = re.compile('https?')
+  url = re.sub(payload['repository']['url'], 'git', 1)
+  url += '.git'
 
-  with open("deploy.sh", "wb") as background:
-    background.write(script_data)
+#  page = urllib2.urlopen(url)
+#  script_data = page.read()
+#  page.close()
+
+#  with open("deploy.sh", "wb") as background:
+#    background.write(script_data)
 
   return ""
 
