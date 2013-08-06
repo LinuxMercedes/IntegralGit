@@ -28,6 +28,7 @@ def update():
   gitre = re.compile('https?')
   url = re.sub(payload['repository']['url'], 'git', 1)
   url += '.git'
+  lastCommit[repo] = url
 
 #  page = urllib2.urlopen(url)
 #  script_data = page.read()
