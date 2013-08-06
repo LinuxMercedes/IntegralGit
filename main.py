@@ -34,7 +34,7 @@ def update():
   print payload['repository']['url']
   print url
 
-  print "home/ubuntu/src/" + payload['repository']['name']
+  print "home/ubuntu/src/" + payload['repository']['name'] + "/"
 
   subprocess.call(["git" ,"pull"], cwd="/home/ubuntu/src/" + payload['repository']['name'] + "/")
 
