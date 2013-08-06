@@ -1,8 +1,11 @@
 from flask import Flask, request
 from pprint import pprint
+import re
 import json
 import ConfigParser
 import urllib2
+
+import subprocess
 
 app = Flask(__name__)
 lastCommit = {}
@@ -24,11 +27,16 @@ def update():
   owner = payload['repository']['owner']['name']
   lastCommit[repo] = payload['commits'][-1]['message']
 
-# Build git clone url
+# Build config url
   gitre = re.compile('https?')
-  url = re.sub(payload['repository']['url'], 'git', 1)
+  url = re.sub(gitre, 'git', payload['repository']['url'], 1)
   url += '.git'
-  lastCommit[repo] = url
+  print payload['repository']['url']
+  print url
+
+  print "home/ubuntu/src/" + payload['repository']['name']
+
+  subprocess.call(["git" ,"pull"], cwd="/home/ubuntu/src/" + payload['repository']['name'] + "/")
 
 #  page = urllib2.urlopen(url)
 #  script_data = page.read()
@@ -37,6 +45,7 @@ def update():
 #  with open("deploy.sh", "wb") as background:
 #    background.write(script_data)
 
+  
   return ""
 
 def parseConfig(filename):
