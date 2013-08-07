@@ -36,7 +36,7 @@ def update():
 
   try:
     gitPull(repo, owner)
-  except(e):
+  except:
     # Skip running host script...lessens chance of RCE
     return
 
