@@ -12,8 +12,11 @@ app = Flask(__name__)
 lastCommit = {}
 repoLocation = "/home/ubuntu/src"
 
+def shellescape(s):
+  return s.replace("'", "'\\''")
+
 def shellquote(s):
-  return "'" + s.replace("'", "'\\''") + "'"
+  return "'" + s + "'"
 
 def log(s, level = 0):
   print s
@@ -46,7 +49,7 @@ def update():
 
 def gitPull(repoName, repoOwner):
 # Build repo folder
-  repoFolder = repoLocation + "/" + shellquote(repoName) + "/"
+  repoFolder = shellquote(repoLocation + "/" + shellescape(repoName) + "/")
   log("Checking if " + repoFolder + " is a git repository...")
 
   # Check for folder
