@@ -7,6 +7,7 @@ import urllib2
 
 import os
 import subprocess
+import socket
 
 app = Flask(__name__)
 lastCommit = {}
@@ -68,20 +69,46 @@ def gitPull(repoName, repoOwner):
     result = subprocess.call(['git', 'clone', cloneURL], cwd=repoLocation)
     log("Clone result: " + str(result))
 
-def runHostScript(repoName, repoOwner):
-  url = "https://raw.github.com/" + repoOwner + "/" + "repoName" + "/master/hostScript"
+def runHostScript(repo, owner):
+  base_url = "https://raw.github.com/" + owner + "/" + repo
+  config_url = base_url + "/master/hostconfig"
 
-  log("Host Script url:" + url)
+  log("Host Config url:" + config_url)
+
+  config_data = ''
 
   try:
-    page = urllib2.urlopen(url)
-    script_data = page.read()
+    page = urllib2.urlopen(config_url)
+    config_data = page.read()
     page.close()
   except:
-    log("Host Script not found, quitting.")
+    log("Host Config not found, quitting.")
+    return
 
-  with open("deploy.sh", "wb") as background:
-    background.write(script_data)
+  log("Got host config, parsing...")
+  jd = json.JSONDecoder()
+  config = jd.decode(config_data)
+
+  script_name = config[socket.getHostname()]['script']
+
+  if(script_name is not None):
+    log("Got script file for host: " + str(script_name))
+    script_url = base_url + "/master/" + script_name
+
+    try:
+      page = urllib2.urlopen(script_url)
+      script_data = page.read()
+      page.close()
+    except:
+      log("Host Script not found, quitting.")
+      return
+
+    script_file = '/tmp/' + shellescape(repo) + '-' + str(os.getpid())
+
+    log("Gost Host Script, writing to:" + script_file)
+
+    with open(script_file, "wb") as script_fh:
+      script_fh.write(script_data)
 
 def parseConfig(filename):
   config = ConfigParser.SafeConfigParser()
