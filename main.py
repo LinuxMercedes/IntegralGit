@@ -13,10 +13,7 @@ lastCommit = {}
 repoLocation = "/home/ubuntu/src"
 
 def shellescape(s):
-  return s.replace("'", "'\\''")
-
-def shellquote(s):
-  return "'" + s + "'"
+  return s.replace("\\", "\\\\").replace("'", "'\\''")
 
 def log(s, level = 0):
   print s
@@ -49,7 +46,7 @@ def update():
 
 def gitPull(repoName, repoOwner):
 # Build repo folder
-  repoFolder = shellquote(repoLocation + "/" + shellescape(repoName) + "/")
+  repoFolder = repoLocation + "/" + shellescape(repoName) + "/"
   log("Checking if " + repoFolder + " is a git repository...")
 
   # Check for folder
