@@ -5,6 +5,7 @@ import json
 import ConfigParser
 import urllib2
 
+import os
 import subprocess
 
 app = Flask(__name__)
@@ -38,11 +39,40 @@ def update():
   url = re.sub(gitre, 'git', payload['repository']['url'], 1)
   url += '.git'
 
-  repoFolder = repoLocation + "/" + shellquote(payload['repository']['name']) + "/"
-  print repoFolder
+  try:
+    gitPull(repo, owner)
+  except(Exception e):
+    # Skip running host script...lessens chance of RCE
+    return
 
-  subprocess.call(["git" ,"pull"], cwd=repoFolder)
+  runHostScript(repo, owner)
 
+def gitPull(repoName, repoOwner):
+# Build repo folder
+  repoFolder = repoLocation + "/" + shellquote(repoName) + "/"
+  log("Checking if " + repoFolder + " is a git repository...")
+
+  # Check for folder
+  if(!os.direxists(repoFolder)):
+    log("Folder does not exist; doing git clone...")
+    cloneURL = "git@github.com:" + repoOwner + "/" + repoName + ".git"
+    result = subprocess.call(["git", "clone", cloneURL], cwd=repoLocation)
+    log("Clone result: " + result)
+    return
+
+  # Check for git repo
+  result = subprocess.call(['git', 'rev-parse'], cwd=repoFolder)
+  if(result != 0):
+    log("Folder exists but is not a git repository. Fix your shit.")
+    raise Exception("Not a git repository")
+
+  # Pull
+  log("Doing git pull...")
+  result = subprocess.call(["git" ,"pull"], cwd=repoFolder)
+  log("Pull result: " + result)
+
+def runHostScript(repoName, repoOwner):
+  pass
 #  page = urllib2.urlopen(url)
 #  script_data = page.read()
 #  page.close()
@@ -51,7 +81,6 @@ def update():
 #    background.write(script_data)
 
   
-  return ""
 
 def parseConfig(filename):
   config = ConfigParser.SafeConfigParser()
