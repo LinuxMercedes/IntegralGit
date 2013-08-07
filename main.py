@@ -11,6 +11,9 @@ app = Flask(__name__)
 lastCommit = {}
 repoLocation = "~/src"
 
+def shellquote(s):
+  return "'" + s.replace("'", "'\\''") + "'"
+
 @app.route("/")
 def hello():
   return "IntegralGit: continuous integration via GitHub"
@@ -34,9 +37,10 @@ def update():
   print payload['repository']['url']
   print url
 
-  print "home/ubuntu/src/" + payload['repository']['name'] + "/"
+  repoFolder = repoLocation + "/" + shellquote(payload['repository']['name']) + "/"
+  print repoFolder
 
-  subprocess.call(["git" ,"pull"], cwd="/home/ubuntu/src/" + payload['repository']['name'] + "/")
+  subprocess.call(["git" ,"pull"], cwd=repoFolder)
 
 #  page = urllib2.urlopen(url)
 #  script_data = page.read()
