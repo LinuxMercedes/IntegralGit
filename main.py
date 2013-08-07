@@ -38,7 +38,7 @@ def update():
     gitPull(repo, owner)
   except Exception as e:
     # Skip running host script...lessens chance of RCE
-    return e
+    return str(e)
 
   runHostScript(repo, owner)
 
