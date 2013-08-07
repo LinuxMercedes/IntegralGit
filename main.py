@@ -50,13 +50,7 @@ def gitPull(repoName, repoOwner):
   log("Checking if " + repoFolder + " is a git repository...")
 
   # Check for folder
-  if(not os.direxists(repoFolder)):
-    log("Folder does not exist; doing git clone...")
-    cloneURL = "git@github.com:" + repoOwner + "/" + repoName + ".git"
-    result = subprocess.call(["git", "clone", cloneURL], cwd=repoLocation)
-    log("Clone result: " + result)
-
-  else:
+  if(os.path.isdir(repoFolder)):
     # Check for git repo
     result = subprocess.call(['git', 'rev-parse'], cwd=repoFolder)
     if(result != 0):
@@ -67,6 +61,12 @@ def gitPull(repoName, repoOwner):
     log("Doing git pull...")
     result = subprocess.call(["git" ,"pull"], cwd=repoFolder)
     log("Pull result: " + result)
+  
+  else:
+    log("Folder does not exist; doing git clone...")
+    cloneURL = "git@github.com:" + repoOwner + "/" + repoName + ".git"
+    result = subprocess.call(["git", "clone", cloneURL], cwd=repoLocation)
+    log("Clone result: " + result)
 
 def runHostScript(repoName, repoOwner):
   url = "https://raw.github.com/" + repoOwner + "/" + "repoName" + "/master/hostScript"
