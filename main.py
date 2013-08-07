@@ -19,6 +19,9 @@ def shellescape(s):
 def log(s, level = 0):
   print s
 
+def repofolder(repo):
+  return repoLocation + "/" + shellescape(repo) + "/"
+
 @app.route("/")
 def hello():
   return "IntegralGit: continuous integration via GitHub"
@@ -47,7 +50,7 @@ def update():
 
 def gitPull(repoName, repoOwner):
 # Build repo folder
-  repoFolder = repoLocation + "/" + shellescape(repoName) + "/"
+  repoFolder = repofolder(repoName)
   log("Checking if " + repoFolder + " is a git repository...")
 
   # Check for folder
@@ -109,6 +112,11 @@ def runHostScript(repo, owner):
 
     with open(script_file, "wb") as script_fh:
       script_fh.write(script_data)
+
+    log("Running script...")
+    subprocess.call(['chmod', '+x', script_file])
+    result = subprocess.call([script_file], cwd = repofolder(repo))
+    log("Script result: " + str(result))
 
 def parseConfig(filename):
   config = ConfigParser.SafeConfigParser()
