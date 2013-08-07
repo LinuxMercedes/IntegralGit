@@ -71,6 +71,8 @@ def gitPull(repoName, repoOwner):
 def runHostScript(repoName, repoOwner):
   url = "https://raw.github.com/" + repoOwner + "/" + "repoName" + "/master/hostScript"
 
+  log("Host Script url:" + url)
+
   page = urllib2.urlopen(url)
   script_data = page.read()
   page.close()
