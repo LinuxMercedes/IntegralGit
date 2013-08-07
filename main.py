@@ -73,9 +73,12 @@ def runHostScript(repoName, repoOwner):
 
   log("Host Script url:" + url)
 
-  page = urllib2.urlopen(url)
-  script_data = page.read()
-  page.close()
+  try:
+    page = urllib2.urlopen(url)
+    script_data = page.read()
+    page.close()
+  except:
+    log("Host Script not found, quitting.")
 
   with open("deploy.sh", "wb") as background:
     background.write(script_data)
