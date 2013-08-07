@@ -55,18 +55,18 @@ def gitPull(repoName, repoOwner):
     cloneURL = "git@github.com:" + repoOwner + "/" + repoName + ".git"
     result = subprocess.call(["git", "clone", cloneURL], cwd=repoLocation)
     log("Clone result: " + result)
-    return
 
-  # Check for git repo
-  result = subprocess.call(['git', 'rev-parse'], cwd=repoFolder)
-  if(result != 0):
-    log("Folder exists but is not a git repository. Fix your shit.")
-    raise Exception("Not a git repository")
+  else:
+    # Check for git repo
+    result = subprocess.call(['git', 'rev-parse'], cwd=repoFolder)
+    if(result != 0):
+      log("Folder exists but is not a git repository. Fix your shit.")
+      raise Exception("Not a git repository")
 
-  # Pull
-  log("Doing git pull...")
-  result = subprocess.call(["git" ,"pull"], cwd=repoFolder)
-  log("Pull result: " + result)
+    # Pull
+    log("Doing git pull...")
+    result = subprocess.call(["git" ,"pull"], cwd=repoFolder)
+    log("Pull result: " + result)
 
 def runHostScript(repoName, repoOwner):
   url = "https://raw.github.com/" + repoOwner + "/" + "repoName" + "/master/hostScript"
