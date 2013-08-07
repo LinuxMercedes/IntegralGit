@@ -36,11 +36,13 @@ def update():
 
   try:
     gitPull(repo, owner)
-  except:
+  except Exception as e:
     # Skip running host script...lessens chance of RCE
-    return
+    return e
 
   runHostScript(repo, owner)
+
+  return "Good job"
 
 def gitPull(repoName, repoOwner):
 # Build repo folder
