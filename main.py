@@ -89,7 +89,7 @@ def runHostScript(repo, owner):
   jd = json.JSONDecoder()
   config = jd.decode(config_data)
 
-  script_name = config[socket.getHostname()]['script']
+  script_name = config[socket.gethostname()]['script']
 
   if(script_name is not None):
     log("Got script file for host: " + str(script_name))
