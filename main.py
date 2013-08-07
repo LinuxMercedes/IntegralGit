@@ -41,7 +41,7 @@ def update():
 
   try:
     gitPull(repo, owner)
-  except(Exception e):
+  except(e):
     # Skip running host script...lessens chance of RCE
     return
 
@@ -53,7 +53,7 @@ def gitPull(repoName, repoOwner):
   log("Checking if " + repoFolder + " is a git repository...")
 
   # Check for folder
-  if(!os.direxists(repoFolder)):
+  if(not os.direxists(repoFolder)):
     log("Folder does not exist; doing git clone...")
     cloneURL = "git@github.com:" + repoOwner + "/" + repoName + ".git"
     result = subprocess.call(["git", "clone", cloneURL], cwd=repoLocation)
