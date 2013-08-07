@@ -59,13 +59,13 @@ def gitPull(repoName, repoOwner):
 
     # Pull
     log("Doing git pull...")
-    result = subprocess.call(["git" ,"pull"], cwd=repoFolder)
+    result = subprocess.call(['git', 'pull'], cwd=repoFolder)
     log("Pull result: " + result)
   
   else:
     log("Folder does not exist; doing git clone...")
     cloneURL = "git@github.com:" + repoOwner + "/" + repoName + ".git"
-    result = subprocess.call(["git", "clone", cloneURL], cwd=repoLocation)
+    result = subprocess.call(['git', 'clone', cloneURL], cwd=repoLocation)
     log("Clone result: " + result)
 
 def runHostScript(repoName, repoOwner):
