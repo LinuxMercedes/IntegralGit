@@ -10,7 +10,7 @@ import subprocess
 
 app = Flask(__name__)
 lastCommit = {}
-repoLocation = "~/src"
+repoLocation = "/home/ubuntu/src"
 
 def shellquote(s):
   return "'" + s.replace("'", "'\\''") + "'"
