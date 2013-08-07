@@ -14,6 +14,9 @@ repoLocation = "~/src"
 def shellquote(s):
   return "'" + s.replace("'", "'\\''") + "'"
 
+def log(s, level = 0):
+  print s
+
 @app.route("/")
 def hello():
   return "IntegralGit: continuous integration via GitHub"
@@ -34,8 +37,6 @@ def update():
   gitre = re.compile('https?')
   url = re.sub(gitre, 'git', payload['repository']['url'], 1)
   url += '.git'
-  print payload['repository']['url']
-  print url
 
   repoFolder = repoLocation + "/" + shellquote(payload['repository']['name']) + "/"
   print repoFolder
