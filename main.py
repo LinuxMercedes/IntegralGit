@@ -34,11 +34,6 @@ def update():
   owner = payload['repository']['owner']['name']
   lastCommit[repo] = payload['commits'][-1]['message']
 
-# Build config url
-  gitre = re.compile('https?')
-  url = re.sub(gitre, 'git', payload['repository']['url'], 1)
-  url += '.git'
-
   try:
     gitPull(repo, owner)
   except(e):
@@ -72,15 +67,14 @@ def gitPull(repoName, repoOwner):
   log("Pull result: " + result)
 
 def runHostScript(repoName, repoOwner):
-  pass
-#  page = urllib2.urlopen(url)
-#  script_data = page.read()
-#  page.close()
+  url = "https://raw.github.com/" + repoOwner + "/" + "repoName" + "/master/hostScript"
 
-#  with open("deploy.sh", "wb") as background:
-#    background.write(script_data)
+  page = urllib2.urlopen(url)
+  script_data = page.read()
+  page.close()
 
-  
+  with open("deploy.sh", "wb") as background:
+    background.write(script_data)
 
 def parseConfig(filename):
   config = ConfigParser.SafeConfigParser()
