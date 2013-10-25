@@ -33,9 +33,11 @@ def github(json):
   return ret
 
 sources = {
-    '131.103.20.165' : bitbucket,
-    '131.103.20.166' : bitbucket,
-    }
+    ('131.103.20.165', 1) : bitbucket,
+    ('131.103.20.166', 1) : bitbucket,
+    ('204.232.175.64', 27) : github,
+    ('192.30.252.0', 22) : github,
+  }
 
 
 repoLocation = "/home/ubuntu/src"
