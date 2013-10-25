@@ -35,7 +35,7 @@ def update():
   jd = json.JSONDecoder()
   payload = jd.decode(request.form['payload'])
   repo = payload['repository']['name']
-  owner = payload['repository']['owner']['name']
+#  owner = payload['repository']['owner']['name']
   lastCommit[repo] = payload['commits'][-1]['message']
 
   try:
