@@ -11,6 +11,33 @@ import socket
 
 app = Flask(__name__)
 lastCommit = {}
+
+def bitbucket(json):
+  ret = {}
+  ret['url'] = json['canon_url'] + json['repository']['absolute_url']
+  ret['name'] = json['repository']['name']
+  ret['commits'] = [{'message' : j['message'], 'branch': j['branch'], 'time': j['timestamp']} for j in json['commits']]
+
+  return ret
+
+def github(json):
+  ret = {}
+  ret['url'] = json['repository']['url']
+  ret['name'] = json['repository']['name']
+  ret['commits'] = []
+  for j in json['commits']:
+    d = {'message' : j['message'], 'time' : j['timestamp']}
+    d['branch'] = re.sub(r'([^\/])$', r'\1', json['ref'])
+    ret['commits'].append(d)
+
+  return ret
+
+sources = {
+    '131.103.20.165' : bitbucket,
+    '131.103.20.166' : bitbucket,
+    }
+
+
 repoLocation = "/home/ubuntu/src"
 
 def shellescape(s):
@@ -65,7 +92,7 @@ def gitPull(repoName, repoOwner):
     log("Doing git pull...")
     result = subprocess.call(['git', 'pull'], cwd=repoFolder)
     log("Pull result: " + str(result))
-  
+
   else:
     log("Folder does not exist; doing git clone...")
     cloneURL = "git@github.com:" + repoOwner + "/" + repoName + ".git"
