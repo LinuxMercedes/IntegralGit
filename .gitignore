@@ -1,0 +1,4 @@
+*.pyc
+uwsgi.log
+uwsgi.pid
+reload
