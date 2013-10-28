@@ -93,6 +93,7 @@ def update():
     gitPull(info)
   except Exception as e:
     # Skip running host script...lessens chance of RCE
+    log('Exception while getting repo: ' + str(e))
     return str(e)
 
   runHostScript(info)
@@ -121,6 +122,7 @@ def getConfigs(info):
 # then applying host-specific configs.
 def getHostConfig(info):
   hostname = socket.gethostname()
+  log('Getting host config for ' + hostname)
 
   # get base config
   config = info['config'].get('configs',{}).get('base',{})
@@ -178,14 +180,14 @@ def gitPull(info):
   # Repo does not exist at all, clone and checkout
   else:
     log("Folder does not exist; doing git clone...")
-    result = subprocess.call(['git', 'clone', info['clone']], cwd=os.path.basename(repoFolder))
+    result = subprocess.call(['git', 'clone', info['clone']], cwd=os.path.dirname(repoFolder))
     log("Clone result: " + str(result))
     log("Checking out local branch...")
     result = subprocess.call(['git', 'checkout', '-b', branch, remote + '/' + branch], cwd=repoFolder)
     log("Checkout result: " + str(result))
 
 def runHostScript(info):
-  script_name = info['hostconfig']['script']
+  script_name = info['hostconfig'].get('script', None)
   repo_folder = info['hostconfig']['location']
 
   if(script_name is not None):
@@ -196,6 +198,9 @@ def runHostScript(info):
     subprocess.call(['chmod', '+x', script_path])
     result = subprocess.call([script_path], cwd = repo_folder)
     log("Script result: " + str(result))
+
+  else:
+    log('No host script configured.')
 
 #TODO: fix
 def parseConfig(filename):
