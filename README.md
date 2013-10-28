@@ -80,6 +80,6 @@ Notes/WIP:
 ---------
 * IntegralGit is confused by merge conflicts on pull. If you are working on your IntegralGit box, please ensure that any upstream changes will apply without conflict, or manually pull and resolve the conflicts.
 * Log information is written to integralgit.log
+* For a basic usage example, check out the IntegralGit repo itself. 
 * Host groups are 200% untested. If they don't seem to work, it is probably my fault.
 * Currently your repo information is a json blob.
-
