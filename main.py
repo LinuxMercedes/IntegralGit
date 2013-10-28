@@ -27,7 +27,7 @@ def bitbucket(json):
 def github(json):
   ret = {}
   ret['url'] = json['repository']['url']
-  ret['raw'] = re.sub('github', 'raw.github', ret['url'], 1)
+  ret['raw'] = re.sub('github', 'raw.github', ret['url'], 1) + '/'
   ret['config'] =  ret['raw'] + 'integralgit/config'
   ret['name'] = json['repository']['name']
   ret['commits'] = []
@@ -98,6 +98,7 @@ def update():
 # Get host configuration file from the integralgit branch
 def getConfigs(info):
   config_data = None
+  log('Host config location: ' + str(info['config']))
   try:
     page = urllib2.urlopen(info['config'])
     config_data = page.read()
