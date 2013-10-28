@@ -63,7 +63,6 @@ def hello():
 
 @app.route("/<repo>")
 def latest(repo):
-  log('wtf')
   return str(state.get(repo, "I don't recognize that repo name. Try committing something to it?"))
 
 @app.route("/update", methods=["POST"])
@@ -77,6 +76,7 @@ def update():
       decoder = d
       break
   else:
+    log('Update request from illegal ip ' + str(source))
     return "Unrecognized source IP"
 
   jd = json.JSONDecoder()
@@ -132,9 +132,6 @@ def getHostConfig(info):
   # get host specific config
   config.update(info['config'].get('configs', {}).get(hostname, {}))
 
-  log('Host config:')
-  log(config)
-
   return config
 
 def gitPull(info):
@@ -180,7 +177,6 @@ def gitPull(info):
   # Repo does not exist at all, clone and checkout
   else:
     log("Folder does not exist; doing git clone...")
-    cloneURL = "git@github.com:" + repoOwner + "/" + repoName + ".git"
     result = subprocess.call(['git', 'clone', info['url']], cwd=os.path.basename(repoFolder))
     log("Clone result: " + str(result))
     log("Checking out local branch...")
@@ -188,7 +184,6 @@ def gitPull(info):
     log("Checkout result: " + str(result))
 
 def runHostScript(info):
-  log(info['hostconfig'])
   script_name = info['hostconfig']['script']
   repo_folder = info['hostconfig']['location']
 
@@ -201,6 +196,7 @@ def runHostScript(info):
     result = subprocess.call([script_path], cwd = repo_folder)
     log("Script result: " + str(result))
 
+#TODO: fix
 def parseConfig(filename):
   config = ConfigParser.SafeConfigParser()
   config.read(filename)
