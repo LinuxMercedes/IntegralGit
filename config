@@ -1,7 +1,8 @@
 {
 	"configs" : {
 		"base" : {
-			"location" : "/home/ubuntu/src/IntegralGit"
+			"location" : "/home/ubuntu/src/IntegralGit",
+			"script" : "reload.sh"
 		}
 	}
 }
