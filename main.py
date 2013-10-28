@@ -12,9 +12,10 @@ import socket
 
 def bitbucket(json):
   ret = {}
-  ret['url'] = json['canon_url'] + json['repository']['absolute_url']
-  ret['raw'] = ret['url'] + 'raw/'
-  ret['config'] = ret['raw'] + 'integralgit/config'
+  ret['url'] = json['canon_url'] + json['repository']['absolute_url'][0:-1] # cut off trailing slash
+  ret['clone'] = re.sub('bitbucket', json['repository']['owner'] + '@bitbucket', 1) + '.git'
+  ret['raw'] = ret['url'] + '/raw'
+  ret['config'] = ret['raw'] + '/integralgit/config'
   ret['name'] = json['repository']['name']
   ret['commits'] = [{'message' : j['message'], 'branch': j['branch'], 'time': j['timestamp']} for j in json['commits']]
 
@@ -23,8 +24,9 @@ def bitbucket(json):
 def github(json):
   ret = {}
   ret['url'] = json['repository']['url']
-  ret['raw'] = re.sub('github', 'raw.github', ret['url'], 1) + '/'
-  ret['config'] =  ret['raw'] + 'integralgit/config'
+  ret['clone'] = ret['url'] + '.git'
+  ret['raw'] = re.sub('github', 'raw.github', ret['url'], 1)
+  ret['config'] =  ret['raw'] + '/integralgit/config'
   ret['name'] = json['repository']['name']
   ret['commits'] = []
   for j in json['commits']:
@@ -83,8 +85,6 @@ def update():
   payload = jd.decode(request.form['payload'])
   info = decoder(payload)
   log(info)
-  repo = info['name']
-  url = info['url']
   state[repo] = info
 
   try:
@@ -177,7 +177,7 @@ def gitPull(info):
   # Repo does not exist at all, clone and checkout
   else:
     log("Folder does not exist; doing git clone...")
-    result = subprocess.call(['git', 'clone', info['url']], cwd=os.path.basename(repoFolder))
+    result = subprocess.call(['git', 'clone', info['clone']], cwd=os.path.basename(repoFolder))
     log("Clone result: " + str(result))
     log("Checking out local branch...")
     result = subprocess.call(['git', 'checkout', '-b', branch, remote + '/' + branch], cwd=repoFolder)
