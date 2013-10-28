@@ -15,6 +15,7 @@ lastCommit = {}
 def bitbucket(json):
   ret = {}
   ret['url'] = json['canon_url'] + json['repository']['absolute_url']
+  ret['config'] = ret['url'] + 'raw/integralgit/config'
   ret['name'] = json['repository']['name']
   ret['commits'] = [{'message' : j['message'], 'branch': j['branch'], 'time': j['timestamp']} for j in json['commits']]
 
@@ -23,6 +24,7 @@ def bitbucket(json):
 def github(json):
   ret = {}
   ret['url'] = json['repository']['url']
+  ret['config'] = re.sub('github', 'raw.github', ret['url'], 1) + 'integralgit/config'
   ret['name'] = json['repository']['name']
   ret['commits'] = []
   for j in json['commits']:
@@ -61,14 +63,28 @@ def latest(repo):
 
 @app.route("/update", methods=["POST"])
 def update():
+  # Prevent requests from hosts we don't recognize
+  source = request.headers['REMOTE_ADDR']
+  decoder = None
+  for n in sources.keys():
+    if network.addressInNetwork(source, network.networkMask(*n)):
+      decoder = sources[n]
+      break
+  else:
+    return "Unrecognized source IP"
+
   jd = json.JSONDecoder()
   payload = jd.decode(request.form['payload'])
-  repo = payload['repository']['name']
+  info = decoder(payload)
+
+  repo = info['repository']['name']
 #  owner = payload['repository']['owner']['name']
-  lastCommit[repo] = payload['commits'][-1]['message']
+  url = info['url']
+  lastCommit[repo] = info['commits'][-1]['message']
 
   try:
-    gitPull(repo, owner)
+    getConfigs(info)
+    gitPull(info)
   except Exception as e:
     # Skip running host script...lessens chance of RCE
     return str(e)
@@ -77,9 +93,44 @@ def update():
 
   return "Good job"
 
-def gitPull(repoName, repoOwner):
+# Get host configuration file from the integralgit branch
+def getConfigs(info):
+  config_data = None
+  try:
+    page = urllib2.urlopen(info['config'])
+    config_data = page.read()
+    page.close()
+  except:
+    log("Host Config not found, quitting.")
+    raise Exception("Could not load host config")
+
+  jd = json.JSONDecoder()
+  info['config'] = jd.decode(config_data)
+  info['hostconfig'] = getHostConfig(info)
+
+# Get specific host configuration
+# by applying a base config (if it exists),
+# applying configs for hostgroups in alphabetical order,
+# then applying host-specific configs.
+def getHostConfig(info):
+  hostname = socket.gethostname()
+
+  # get base config
+  config = info['config'].get('configs',{}).get('base',{})
+
+  # get hostgroup configs
+  for group, hosts in iter(sorted(info['config'].get('groups', {}).iteritems())):
+    if hostname in hosts:
+      config.update(info['config'].get('configs', {}).get(group, {}))
+
+  # get host specific config
+  config.update(info['config'].get('configs', {}).get(hostname, {}))
+
+  return config
+
+def gitPull(repo, url):
 # Build repo folder
-  repoFolder = repofolder(repoName)
+  repoFolder = repofolder(name)
   log("Checking if " + repoFolder + " is a git repository...")
 
   # Check for folder
