@@ -187,12 +187,7 @@ def gitPull(info):
     log("Checkout result: " + str(result))
 
 def runHostScript(info):
-<<<<<<< Updated upstream
   script_name = info['hostconfig'].get('script', None)
-=======
-  log(info['hostconfig'])
-  script_name = info['hostconfig']['script']
->>>>>>> Stashed changes
   repo_folder = info['hostconfig']['location']
 
   if(script_name is not None):
