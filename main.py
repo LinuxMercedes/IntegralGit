@@ -13,7 +13,7 @@ import socket
 def bitbucket(json):
   ret = {}
   ret['url'] = json['canon_url'] + json['repository']['absolute_url'][0:-1] # cut off trailing slash
-  ret['clone'] = re.sub('bitbucket', json['repository']['owner'] + '@bitbucket', 1) + '.git'
+  ret['clone'] = re.sub('bitbucket', json['repository']['owner'] + '@bitbucket', ret['url'], 1) + '.git'
   ret['raw'] = ret['url'] + '/raw'
   ret['config'] = ret['raw'] + '/integralgit/config'
   ret['name'] = json['repository']['name']
