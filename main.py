@@ -9,12 +9,6 @@ import os
 import subprocess
 import socket
 
-app = Flask(__name__)
-state = {}
-
-logfile = open('integralgit.log', 'a')
-
-log('Starting up...')
 
 def bitbucket(json):
   ret = {}
@@ -40,13 +34,6 @@ def github(json):
 
   return ret
 
-sources = {
-    ('131.103.20.165', 1) : bitbucket,
-    ('131.103.20.166', 1) : bitbucket,
-    ('204.232.175.64', 27) : github,
-    ('192.30.252.0', 22) : github,
-  }
-
 def shellescape(s):
   return s.replace("\\", "\\\\").replace("'", "'\\''")
 
@@ -55,6 +42,20 @@ def log(s, level = 0):
   logfile.write("\n")
   logfile.flush()
   print s
+
+sources = {
+    ('131.103.20.165', 1) : bitbucket,
+    ('131.103.20.166', 1) : bitbucket,
+    ('204.232.175.64', 27) : github,
+    ('192.30.252.0', 22) : github,
+  }
+
+app = Flask(__name__)
+state = {}
+
+logfile = open('integralgit.log', 'a')
+
+log('Starting up...')
 
 @app.route("/")
 def hello():
