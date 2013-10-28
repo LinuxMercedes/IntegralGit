@@ -50,6 +50,8 @@ def shellescape(s):
 
 def log(s, level = 0):
   logfile.write(str(s))
+  logfile.write("\n")
+  logfile.flush()
   print s
 
 @app.route("/")
@@ -58,12 +60,14 @@ def hello():
 
 @app.route("/<repo>")
 def latest(repo):
+  log('wtf')
   return state.get(repo, "I don't recognize that repo name. Try committing something to it?")
 
 @app.route("/update", methods=["POST"])
 def update():
   # Prevent requests from hosts we don't recognize
-  source = request.headers['REMOTE_ADDR']
+  source = request.remote_addr
+  log('source: ' + str(source))
   decoder = None
   for n in sources.keys():
     if network.addressInNetwork(source, network.networkMask(*n)):
@@ -75,7 +79,7 @@ def update():
   jd = json.JSONDecoder()
   payload = jd.decode(request.form['payload'])
   info = decoder(payload)
-
+  log(info)
   repo = info['repository']['name']
   url = info['url']
   state[repo] = info
