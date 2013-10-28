@@ -52,12 +52,12 @@ sources = {
     ('192.30.252.0', 22) : github,
   }
 
-app = Flask(__name__)
 state = {}
 
 logfile = open('integralgit.log', 'a')
-
 log('Starting up...')
+
+app = Flask(__name__)
 
 @app.route("/")
 def hello():
@@ -85,8 +85,8 @@ def update():
   jd = json.JSONDecoder()
   payload = jd.decode(request.form['payload'])
   info = decoder(payload)
-  log(info)
   state[repo] = info
+  log(info)
 
   try:
     getConfigs(info)
