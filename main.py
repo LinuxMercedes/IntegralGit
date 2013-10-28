@@ -94,7 +94,7 @@ def update():
     # Skip running host script...lessens chance of RCE
     return str(e)
 
-  runHostScript(repo, owner)
+  runHostScript(info)
 
   return "Good job"
 
@@ -188,7 +188,7 @@ def gitPull(info):
     log("Checkout result: " + str(result))
 
 def runHostScript(info):
-  log(info['hostname'])
+  log(info['hostconfig'])
   script_name = info['hostconfig']['script']
   repo_folder = info['hostconfig']['location']
 
