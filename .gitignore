@@ -1,4 +1,6 @@
 *.pyc
+.*.sw?
+
 uwsgi.log
 uwsgi.pid
 reload
