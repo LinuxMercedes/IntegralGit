@@ -14,9 +14,14 @@ Add a POST service hook on your repositories of choice for http://your-integralg
 
 Set up your repository:
 * Make a new empty branch named integralgit
-  > git checkout --orphan integralgit
-	> git rm -rf .
+
+```
+git checkout --orphan integralgit
+git rm -rf .
+```
+
 * Make a json file named config formatted like so:
+
 ```JSON
 {
 	"hostgroups" : {
@@ -48,9 +53,14 @@ Set up your repository:
   }
 }
 ```
+
 * Push this config up to your repo:
-  > git commit -a -m "Config"
-	> git push -u origin integralgit
+
+```
+git commit -a -m "Config"
+git push -u origin integralgit
+```
+
 * That's it! IntegralGit should pull your config changes automatically and use them for future push events.
 
 Configuration Information:
