@@ -65,10 +65,10 @@ git push -u origin integralgit
 
 Configuration Information:
 --------------------------
-* location: You MUST specify this, otherwise IntegralGit will be confused.
-* script: If you do not specify a script, IntegralGit will just pull your updated changes.
-* branch: Defaults to 'master'
-* remote: Defaults to 'origin'
+* `location`: You MUST specify this, otherwise IntegralGit will be confused.
+* `script`: If you do not specify a script, IntegralGit will just pull your updated changes.
+* `branch`: Defaults to 'master'
+* `remote`: Defaults to 'origin'
 * The final host configuration is the union of base, all hostgroups containing the host (applied alphabetically), and the host-specific config. Values can be set in one config and overridden in a config applied later.
 
 Using IntegralGit:
