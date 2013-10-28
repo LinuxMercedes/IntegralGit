@@ -10,14 +10,14 @@ http://flask.pocoo.org/docs/deploying/uwsgi/#starting-your-app-with-uwsgi
 
 Configuration:
 --------------
-Add a POST service hook on your repositories of choice for http://<your-integralgit-server>/update
+Add a POST service hook on your repositories of choice for http://your-integralgit-server/update
 
 Set up your repository:
 * Make a new empty branch named integralgit
   > git checkout --orphan integralgit
 	> git rm -rf .
 * Make a json file named config formatted like so:
-  ```JSON
+```JSON
 {
 	"hostgroups" : {
 		"group-name" : [
@@ -64,7 +64,7 @@ Configuration Information:
 Using IntegralGit:
 -----------------
 * For the most part, IntegralGit should silently do whatever you want it to.
-* Visiting http://<your-integralgit-server>/<repo-name> will provide information on commits to the repository since IntegralGit was last restarted.
+* Visiting http://your-integralgit-server/repo-name will provide information on commits to the repository since IntegralGit was last restarted.
 
 Notes/WIP:
 ---------
