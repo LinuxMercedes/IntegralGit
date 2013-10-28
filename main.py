@@ -129,6 +129,9 @@ def getHostConfig(info):
   # get host specific config
   config.update(info['config'].get('configs', {}).get(hostname, {}))
 
+  log('Host config:')
+  log(config)
+
   return config
 
 def gitPull(info):
