@@ -75,6 +75,7 @@ def update():
   decoder = None
   for n, d in sources.iteritems():
     if network.isAddressInNetwork(source, *n):
+      log('Source IP is in network' + str(n))
       decoder = d
       break
   else:
