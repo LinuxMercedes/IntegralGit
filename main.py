@@ -12,6 +12,8 @@ import socket
 app = Flask(__name__)
 state = {}
 
+logfile = open('integralgit.log', 'a')
+
 def bitbucket(json):
   ret = {}
   ret['url'] = json['canon_url'] + json['repository']['absolute_url']
@@ -47,6 +49,7 @@ def shellescape(s):
   return s.replace("\\", "\\\\").replace("'", "'\\''")
 
 def log(s, level = 0):
+  logfile.write(str(s))
   print s
 
 @app.route("/")
