@@ -6,7 +6,7 @@ def makeMask(n):
 
 def dottedQuadToNum(ip):
     "convert decimal dotted quad string to long integer"
-    return struct.unpack('L',socket.inet_aton(ip))[0]
+    return struct.unpack('I',socket.inet_aton(ip))[0]
 
 def networkMask(ip,bits):
     "Convert a network address to a long integer" 
@@ -15,4 +15,7 @@ def networkMask(ip,bits):
 def addressInNetwork(ip,net):
    "Is an address in a network"
    return ip & net == net
+
+def isAddressInNetwork(ip,net,bits):
+   return addressInNetwork(dottedQuadToNum(ip), networkMask(net, bits))
 

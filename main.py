@@ -4,7 +4,7 @@ import re
 import json
 import ConfigParser
 import urllib2
-
+import network
 import os
 import subprocess
 import socket
@@ -69,9 +69,9 @@ def update():
   source = request.remote_addr
   log('source: ' + str(source))
   decoder = None
-  for n in sources.keys():
-    if network.addressInNetwork(source, network.networkMask(*n)):
-      decoder = sources[n]
+  for n, d in sources.iteritems():
+    if network.isAddressInNetwork(source, *n):
+      decoder = d
       break
   else:
     return "Unrecognized source IP"
