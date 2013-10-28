@@ -15,7 +15,8 @@ lastCommit = {}
 def bitbucket(json):
   ret = {}
   ret['url'] = json['canon_url'] + json['repository']['absolute_url']
-  ret['config'] = ret['url'] + 'raw/integralgit/config'
+  ret['raw'] = ret['url'] + 'raw/'
+  ret['config'] = ret['raw'] + 'integralgit/config'
   ret['name'] = json['repository']['name']
   ret['commits'] = [{'message' : j['message'], 'branch': j['branch'], 'time': j['timestamp']} for j in json['commits']]
 
@@ -24,7 +25,8 @@ def bitbucket(json):
 def github(json):
   ret = {}
   ret['url'] = json['repository']['url']
-  ret['config'] = re.sub('github', 'raw.github', ret['url'], 1) + 'integralgit/config'
+  ret['raw'] = re.sub('github', 'raw.github', ret['url'], 1)
+  ret['config'] =  ret['raw'] + 'integralgit/config'
   ret['name'] = json['repository']['name']
   ret['commits'] = []
   for j in json['commits']:
@@ -78,7 +80,6 @@ def update():
   info = decoder(payload)
 
   repo = info['repository']['name']
-#  owner = payload['repository']['owner']['name']
   url = info['url']
   lastCommit[repo] = info['commits'][-1]['message']
 
@@ -128,9 +129,13 @@ def getHostConfig(info):
 
   return config
 
-def gitPull(repo, url):
+def gitPull(info):
 # Build repo folder
-  repoFolder = repofolder(name)
+  repoFolder = info['hostconfig']['location']
+  if repoFolder is None:
+    log("No location found for repository!")
+    raise Exception("No location found!")
+
   log("Checking if " + repoFolder + " is a git repository...")
 
   # Check for folder
@@ -141,16 +146,38 @@ def gitPull(repo, url):
       log("Folder exists but is not a git repository. Fix your shit.")
       raise Exception("Not a git repository")
 
-    # Pull
-    log("Doing git pull...")
-    result = subprocess.call(['git', 'pull'], cwd=repoFolder)
-    log("Pull result: " + str(result))
+    branch = info['hostconfig'].get('branch', 'master')
+    remote = info['hostconfig'].get('remote', 'origin')
 
+    # If local branch exists, checkout and pull
+    result = subprocess.call(['git', 'show-branch', branch], cwd=repoFolder)
+    if result == 0:
+      log("Checking out branch...")
+      result = subprocess.call(['git', 'checkout', branch], cwd=repoFolder)
+      log("Checkout result: " + str(result))
+      log("Doing git pull...")
+      result = subprocess.call(['git', 'pull'], cwd=repoFolder)
+      log("Pull result: " + str(result))
+
+    # Local branch does not exist, fetch and track remote branch
+    else:
+      log("Local branch does not exist...")
+      log("Doing git fetch...")
+      result = subprocess.call(['git', 'fetch'], cwd=repoFolder)
+      log("Fetch result: " + str(result))
+      log("Checking out branch...")
+      result = suprocess.call(['git', 'checkout', '--track', remote + '/' + branch], cwd=repoFolder)
+      log("Checkout result: " + str(result))
+
+  # Repo does not exist at all, clone and checkout
   else:
     log("Folder does not exist; doing git clone...")
     cloneURL = "git@github.com:" + repoOwner + "/" + repoName + ".git"
-    result = subprocess.call(['git', 'clone', cloneURL], cwd=repoLocation)
+    result = subprocess.call(['git', 'clone', info['url']], cwd=os.path.basename(repoFolder))
     log("Clone result: " + str(result))
+    log("Checking out local branch...")
+    result = subprocess.call(['git', 'checkout', '-b', branch, remote + '/' + branch], cwd=repoFolder)
+    log("Checkout result: " + str(result))
 
 def runHostScript(repo, owner):
   base_url = "https://raw.github.com/" + owner + "/" + repo
