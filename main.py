@@ -179,50 +179,17 @@ def gitPull(info):
     result = subprocess.call(['git', 'checkout', '-b', branch, remote + '/' + branch], cwd=repoFolder)
     log("Checkout result: " + str(result))
 
-def runHostScript(repo, owner):
-  base_url = "https://raw.github.com/" + owner + "/" + repo
-  config_url = base_url + "/master/hostconfig"
-
-  log("Host Config url:" + config_url)
-
-  config_data = ''
-
-  try:
-    page = urllib2.urlopen(config_url)
-    config_data = page.read()
-    page.close()
-  except:
-    log("Host Config not found, quitting.")
-    return
-
-  log("Got host config, parsing...")
-  jd = json.JSONDecoder()
-  config = jd.decode(config_data)
-
-  script_name = config[socket.gethostname()]['script']
+def runHostScript(info):
+  script_name = info['hostconfig']['script']
+  repo_folder = info['hostconfig']['location']
 
   if(script_name is not None):
-    log("Got script file for host: " + str(script_name))
-    script_url = base_url + "/master/" + script_name
-
-    try:
-      page = urllib2.urlopen(script_url)
-      script_data = page.read()
-      page.close()
-    except:
-      log("Host Script not found, quitting.")
-      return
-
-    script_file = '/tmp/' + shellescape(repo) + '-' + str(os.getpid())
-
-    log("Gost Host Script, writing to:" + script_file)
-
-    with open(script_file, "wb") as script_fh:
-      script_fh.write(script_data)
+    script_path = os.path.join(repo_folder, script_name)
+    log("Got script file for host: " + str(script_path))
 
     log("Running script...")
-    subprocess.call(['chmod', '+x', script_file])
-    result = subprocess.call([script_file], cwd = repofolder(repo))
+    subprocess.call(['chmod', '+x', script_path])
+    result = subprocess.call([script_path], cwd = repo_folder)
     log("Script result: " + str(result))
 
 def parseConfig(filename):
@@ -234,3 +201,4 @@ def parseConfig(filename):
 
 if __name__=="__main__":
   app.run(host="0.0.0.0", debug=True)
+
