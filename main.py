@@ -14,6 +14,8 @@ state = {}
 
 logfile = open('integralgit.log', 'a')
 
+log('Starting up...')
+
 def bitbucket(json):
   ret = {}
   ret['url'] = json['canon_url'] + json['repository']['absolute_url']
