@@ -61,7 +61,7 @@ def hello():
 @app.route("/<repo>")
 def latest(repo):
   log('wtf')
-  return state.get(repo, "I don't recognize that repo name. Try committing something to it?")
+  return str(state.get(repo, "I don't recognize that repo name. Try committing something to it?"))
 
 @app.route("/update", methods=["POST"])
 def update():
@@ -80,7 +80,7 @@ def update():
   payload = jd.decode(request.form['payload'])
   info = decoder(payload)
   log(info)
-  repo = info['repository']['name']
+  repo = info['name']
   url = info['url']
   state[repo] = info
 
