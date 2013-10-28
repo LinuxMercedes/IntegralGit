@@ -10,7 +10,7 @@ import subprocess
 import socket
 
 app = Flask(__name__)
-lastCommit = {}
+state = {}
 
 def bitbucket(json):
   ret = {}
@@ -43,17 +43,11 @@ sources = {
     ('192.30.252.0', 22) : github,
   }
 
-
-repoLocation = "/home/ubuntu/src"
-
 def shellescape(s):
   return s.replace("\\", "\\\\").replace("'", "'\\''")
 
 def log(s, level = 0):
   print s
-
-def repofolder(repo):
-  return repoLocation + "/" + shellescape(repo) + "/"
 
 @app.route("/")
 def hello():
@@ -61,7 +55,7 @@ def hello():
 
 @app.route("/<repo>")
 def latest(repo):
-  return lastCommit.get(repo, "I don't recognize that repo name. Try committing something to it?")
+  return state.get(repo, "I don't recognize that repo name. Try committing something to it?")
 
 @app.route("/update", methods=["POST"])
 def update():
@@ -81,7 +75,7 @@ def update():
 
   repo = info['repository']['name']
   url = info['url']
-  lastCommit[repo] = info['commits'][-1]['message']
+  state[repo] = info
 
   try:
     getConfigs(info)
