@@ -27,7 +27,7 @@ def bitbucket(json):
 def github(json):
   ret = {}
   ret['url'] = json['repository']['url']
-  ret['raw'] = re.sub('github', 'raw.github', ret['url'], 1)
+  ret['raw'] = re.sub('github', 'raw.github', ret['url'], 1) + '/'
   ret['config'] =  ret['raw'] + 'integralgit/config'
   ret['name'] = json['repository']['name']
   ret['commits'] = []
@@ -61,7 +61,7 @@ def hello():
 @app.route("/<repo>")
 def latest(repo):
   log('wtf')
-  return state.get(repo, "I don't recognize that repo name. Try committing something to it?")
+  return str(state.get(repo, "I don't recognize that repo name. Try committing something to it?"))
 
 @app.route("/update", methods=["POST"])
 def update():
@@ -80,7 +80,7 @@ def update():
   payload = jd.decode(request.form['payload'])
   info = decoder(payload)
   log(info)
-  repo = info['repository']['name']
+  repo = info['name']
   url = info['url']
   state[repo] = info
 
@@ -98,6 +98,7 @@ def update():
 # Get host configuration file from the integralgit branch
 def getConfigs(info):
   config_data = None
+  log('Host config location: ' + str(info['config']))
   try:
     page = urllib2.urlopen(info['config'])
     config_data = page.read()
