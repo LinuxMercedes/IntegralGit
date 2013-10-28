@@ -188,6 +188,7 @@ def gitPull(info):
     log("Checkout result: " + str(result))
 
 def runHostScript(info):
+  log(info['hostname'])
   script_name = info['hostconfig']['script']
   repo_folder = info['hostconfig']['location']
 
