@@ -85,7 +85,7 @@ def update():
   jd = json.JSONDecoder()
   payload = jd.decode(request.form['payload'])
   info = decoder(payload)
-  state[repo] = info
+  state[info['name']] = info
   log(info)
 
   try:
