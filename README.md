@@ -27,30 +27,30 @@ git rm -rf .
 	"hostgroups" : {
 		"group-name" : [
 			"host1",
-		  "host2",
+			"host2",
 			"host3"
-		],
-		"another-group-name" : [
-			"host"
-		]
+				],
+			"another-group-name" : [
+				"host"
+				]
 	},
-	"configs" : {
-		"base" : {
-			"location" : "/absolute/path/to/repo/location",
-			"script" : "./script-in-repo.sh",
-			"branch" : "branch-you-want-checked-out",
-			"remote" : "usually-origin-but-if-you're-a-special-snowflake-you-can-change-this"
-		},
-		"group-name" : {
-			"location" : "/special/repo/location/for/hosts/in/this/group"
-		},
-		"another-group-name" : {
-			"branch" : "if-this-group-was-your-test-fleet-you'd-want-it-to-use-your-dev-branch-instead-of-master"
-		},
-		"host3" : {
-      "script" : "/host/3/is/also/a/special/snowflake.sh"
-    }
-  }
+		"configs" : {
+			"base" : {
+				"location" : "/absolute/path/to/repo/location",
+				"script" : "./script-in-repo.sh",
+				"branch" : "branch-you-want-checked-out",
+				"remote" : "usually-origin-but-if-you're-a-special-snowflake-you-can-change-this"
+			},
+			"group-name" : {
+				"location" : "/special/repo/location/for/hosts/in/this/group"
+			},
+			"another-group-name" : {
+				"branch" : "if-this-group-was-your-test-fleet-you'd-want-it-to-use-your-dev-branch-instead-of-master"
+			},
+			"host3" : {
+				"script" : "/host/3/is/also/a/special/snowflake.sh"
+			}
+		}
 }
 ```
 
@@ -80,6 +80,6 @@ Notes/WIP:
 ---------
 * IntegralGit is confused by merge conflicts on pull. If you are working on your IntegralGit box, please ensure that any upstream changes will apply without conflict, or manually pull and resolve the conflicts.
 * Log information is written to integralgit.log
-* For a basic usage example, check out the IntegralGit repo itself. 
+* For a basic usage example, check out the IntegralGit repo itself.
 * Host groups are 200% untested. If they don't seem to work, it is probably my fault.
 * Currently your repo information is a json blob.
