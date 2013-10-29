@@ -34,23 +34,23 @@ git rm -rf .
 				"host"
 				]
 	},
-		"configs" : {
-			"base" : {
-				"location" : "/absolute/path/to/repo/location",
-				"script" : "./script-in-repo.sh",
-				"branch" : "branch-you-want-checked-out",
-				"remote" : "usually-origin-but-if-you're-a-special-snowflake-you-can-change-this"
-			},
-			"group-name" : {
-				"location" : "/special/repo/location/for/hosts/in/this/group"
-			},
-			"another-group-name" : {
-				"branch" : "if-this-group-was-your-test-fleet-you'd-want-it-to-use-your-dev-branch-instead-of-master"
-			},
-			"host3" : {
-				"script" : "/host/3/is/also/a/special/snowflake.sh"
-			}
+	"configs" : {
+		"base" : {
+			"location" : "/absolute/path/to/repo/location",
+			"script" : "./script-in-repo.sh",
+			"branch" : "branch-you-want-checked-out",
+			"remote" : "usually-origin-but-if-you're-a-special-snowflake-you-can-change-this"
+		},
+		"group-name" : {
+			"location" : "/special/repo/location/for/hosts/in/this/group"
+		},
+		"another-group-name" : {
+			"branch" : "if-this-group-was-your-test-fleet-you'd-want-it-to-use-your-dev-branch-instead-of-master"
+		},
+		"host3" : {
+			"script" : "/host/3/is/also/a/special/snowflake.sh"
 		}
+	}
 }
 ```
 
