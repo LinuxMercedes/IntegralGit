@@ -174,7 +174,7 @@ def gitPull(info):
       result = subprocess.call(['git', 'fetch'], cwd=repoFolder)
       log("Fetch result: " + str(result))
       log("Checking out branch...")
-      result = suprocess.call(['git', 'checkout', '--track', remote + '/' + branch], cwd=repoFolder)
+      result = subprocess.call(['git', 'checkout', '--track', remote + '/' + branch], cwd=repoFolder)
       log("Checkout result: " + str(result))
 
   # Repo does not exist at all, clone and checkout
