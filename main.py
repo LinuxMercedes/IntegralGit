@@ -173,7 +173,7 @@ def gitPull(info):
       log("Doing git fetch...")
       result = subprocess.call(['git', 'fetch'], cwd=repoFolder)
       log("Fetch result: " + str(result))
-      log("Checking out branch...")
+      log("Checking out branch " + str(branch))
       result = subprocess.call(['git', 'checkout', '--track', remote + '/' + branch], cwd=repoFolder)
       log("Checkout result: " + str(result))
 
