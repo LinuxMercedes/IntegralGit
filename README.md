@@ -8,6 +8,7 @@ Setup:
 -----
 http://flask.pocoo.org/docs/deploying/uwsgi/#starting-your-app-with-uwsgi
 
+
 Configuration:
 --------------
 Add a POST service hook on your repositories of choice for http://your-integralgit-server/update
@@ -20,7 +21,7 @@ git checkout --orphan integralgit
 git rm -rf .
 ```
 
-* Make a json file named config formatted like so:
+* Make a json file named ``config`` formatted like so:
 
 ```JSON
 {
@@ -54,9 +55,10 @@ git rm -rf .
 }
 ```
 
-* Push this config up to your repo:
+* Add and push ``config`` up to your repo:
 
 ```
+git add config
 git commit -a -m "Config"
 git push -u origin integralgit
 ```
