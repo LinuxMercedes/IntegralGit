@@ -83,7 +83,10 @@ def update():
     return "Unrecognized source IP"
 
   jd = json.JSONDecoder()
-  payload = jd.decode(request.form['payload'])
+  if 'payload' in request.form:
+    payload = jd.decode(request.form['payload'])
+  else:
+    payload = jd.decode(request.get_data())
   info = decoder(payload)
   state[info['name']] = info
   log(info)
