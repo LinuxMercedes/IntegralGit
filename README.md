@@ -30,10 +30,10 @@ git rm -rf .
 			"host1",
 			"host2",
 			"host3"
-				],
-			"another-group-name" : [
-				"host"
-				]
+		],
+		"another-group-name" : [
+			"host"
+		]
 	},
 	"configs" : {
 		"base" : {
@@ -72,6 +72,21 @@ Configuration Information:
 * `branch`: Defaults to 'master'
 * `remote`: Defaults to 'origin'
 * The final host configuration is the union of base, all hostgroups containing the host (applied alphabetically), and the host-specific config. Values can be set in one config and overridden in a config applied later.
+
+Sample Configuration:
+---------------------
+```JSON
+{
+    "configs" : {
+        "base" : {
+            "location" : "/home/user/folder/",
+            "script" : "./update.sh",
+            "branch" : "master",
+            "remote" : "origin"
+        }
+    }
+}
+```
 
 Using IntegralGit:
 -----------------
